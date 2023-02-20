@@ -3,6 +3,7 @@ functions:
 - type: knative-workflow
   id: nsfw
   image: gcr.io/direktiv/functions/nsfw:test
+  size: large
 states:
 - id: state0
   type: action
