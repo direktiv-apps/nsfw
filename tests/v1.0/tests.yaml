@@ -1,0 +1,26 @@
+url: ""
+functions:
+- type: knative-workflow
+  id: nsfw
+  image: gcr.io/direktiv/functions/nsfw:test
+states:
+- id: state0
+  type: action
+  action:
+    function: nsfw
+    input:
+      images:
+      - image: /logo.png
+  transition: state1
+- id: state1
+  type: action
+  catch:
+  - error: '*'
+  action:
+    function: nsfw
+    input:
+      images:
+      - image: myfile.png
+    files:
+    - key: myfile.png
+      scope: workflow

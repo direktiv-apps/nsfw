@@ -1,0 +1,182 @@
+swagger: "2.0"
+info:
+  description: Classifiy images NSFW (Not-Safe-For-Work)
+  title: nsfw
+  version: "1.0"
+  x-direktiv-meta:
+    container: gcr.io/direktiv/functions/nsfw
+    maintainer: |-
+      [direktiv.io](https://www.direktiv.io) 
+    issues: https://github.com/direktiv-apps/nsfw/issues
+    url: https://github.com/direktiv-apps/nsfw  
+    categories:
+    - misc
+    license: |-
+      [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0)
+    long-description: >-
+      This function takes a alist of images and classifies them. It returns the following categories and their probabilty:
+
+
+      - drawings
+
+      - hentai
+      
+      - neutral
+      
+      - porn
+      
+      - sexy
+
+
+      It uses a [Keras/Tensorflow](https://github.com/GantMan/nsfw_model) model with 93% accuracy.
+      
+consumes:
+- application/json
+produces:
+- application/json
+schemes:
+- http
+paths:
+  /: 
+    delete:
+      parameters:
+        - name: Direktiv-ActionID
+          in: header
+          type: string
+          description: |
+            On cancel Direktiv sends a DELETE request to
+            the action with id in the header
+      x-direktiv:
+        cancel: echo 'cancel {{ .DirektivActionID }}'
+      responses:
+        200:
+    post:
+      parameters:
+        - name: Direktiv-ActionID
+          in: header
+          type: string
+          default: development
+          description: |
+            direktiv action id is an UUID. 
+            For development it can be set to 'development'
+        - name: Direktiv-TempDir
+          in: header
+          type: string
+          default: /tmp
+          description: |
+            direktiv temp dir is the working directory for that request
+            For development it can be set to e.g. '/tmp'
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              images:
+                type: array
+                description: Array of images.
+                items:
+                  type: object
+                  properties:
+                    image:
+                      type: string
+                      description: Image to verify
+                default: 
+                - image: test.png 
+      # direktiv code generation is configured here
+      x-direktiv-function: |-
+        functions:
+        - id: nsfw
+          image: gcr.io/direktiv/functions/nsfw:1.0
+          type: knative-workflow
+      x-direktiv-examples:
+        # ADD MORE EXAMPLES HERE
+        - title: Basic
+          content: |-
+            - id: nsfw
+              type: action
+              action:
+                function: nsfw
+                input: 
+                  images:
+                  - image: /logo.png
+        - title: Advanced
+          content: |-
+            - id: nsfw
+              type: action
+              action:
+                function: nsfw
+                files:
+                - key: myfile.png
+                  scope: workflow
+                input: 
+                  images:
+                  - image: myfile.png
+              catch:
+              - error: '*'
+      x-direktiv:  
+        cmds:
+        - action: foreach
+          loop: .Images
+          exec: 'sh -c "python3 /verify.py {{ .Item.Image }} > /dev/null 2>&1 && cat {{ .Item.Image }}.json"'
+        output: |
+          {
+            "nsfw": {{ index . 0 | toJson }}
+          }
+      x-direktiv-errors:
+        io.direktiv.command.error: Command execution failed
+        io.direktiv.output.error: Template error for output generation of the service
+        io.direktiv.ri.error: Can not create information object from request
+      responses:
+        200:
+          description: List of verified images.
+          examples:
+            nsfw:
+            - result:
+                "/logo.png":
+                  drawings: 0.9428686499595642
+                  hentai: 0.006181077565997839
+                  neutral: 0.02313055470585823
+                  porn: 0.012030646204948425
+                  sexy: 0.015789249911904335
+              success: true
+          schema:
+            type: object
+            properties:
+              nsfw:
+                type: array
+                items:
+                  type: object
+                  required:
+                  - success
+                  - result
+                  properties:
+                    success:
+                      type: boolean
+                    result:
+                      additionalProperties: {}
+        default:
+          description: generic error response
+          headers:
+            Direktiv-ErrorCode:
+              type: string
+            Direktiv-ErrorMessage:
+              type: string
+          schema:
+            $ref: "#/definitions/error"
+definitions:
+  direktivFile:
+    type: object
+    x-go-type:
+      type: DirektivFile
+      import:
+        package: github.com/direktiv/apps/go/pkg/apps 
+  error:
+    type: object
+    required:
+      - errorCode
+      - errorMessage
+    properties:
+      errorCode:
+        type: string
+      errorMessage:
+        type: string
