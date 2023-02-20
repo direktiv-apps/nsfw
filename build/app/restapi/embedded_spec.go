@@ -29,17 +29,17 @@ func init() {
   ],
   "swagger": "2.0",
   "info": {
-    "description": "Run nsfw in Direktiv",
+    "description": "Classifiy images NSFW (Not-Safe-For-Work)",
     "title": "nsfw",
     "version": "1.0",
     "x-direktiv-meta": {
       "categories": [
-        "unknown"
+        "misc"
       ],
       "container": "gcr.io/direktiv/functions/nsfw",
       "issues": "https://github.com/direktiv-apps/nsfw/issues",
       "license": "[Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0)",
-      "long-description": "Run nsfw in Direktiv as a function",
+      "long-description": "This function takes a alist of images and classifies them. It returns the following categories and their probabilty:\n\n- drawings\n- hentai\n- neutral\n- porn\n- sexy\n\nIt uses a [Keras/Tensorflow](https://github.com/GantMan/nsfw_model) model with 93% accuracy. This ML (mahcin learning) image requires almost 4GB disk space. Therefore the initial download can take some time depending on the network speed.",
       "maintainer": "[direktiv.io](https://www.direktiv.io) ",
       "url": "https://github.com/direktiv-apps/nsfw"
     }
@@ -152,8 +152,9 @@ func init() {
           "cmds": [
             {
               "action": "foreach",
-              "exec": "sh -c \"python3 /verify.py {{ .Item.Image }} \u003e /dev/null 2\u003e\u00261 \u0026\u0026 cat {{ .Item.Image }}.json\"",
-              "loop": ".Images"
+              "exec": "sh -c \"echo processing {{ .Item.Image }} \u0026\u0026 python3 /verify.py {{ .Item.Image }} \u003e /dev/null 2\u003e\u00261 \u0026\u0026 cat {{ .Item.Image }}.json\"",
+              "loop": ".Images",
+              "print": false
             }
           ],
           "output": "{\n  \"nsfw\": {{ index . 0 | toJson }}\n}\n"
@@ -234,17 +235,17 @@ func init() {
   ],
   "swagger": "2.0",
   "info": {
-    "description": "Run nsfw in Direktiv",
+    "description": "Classifiy images NSFW (Not-Safe-For-Work)",
     "title": "nsfw",
     "version": "1.0",
     "x-direktiv-meta": {
       "categories": [
-        "unknown"
+        "misc"
       ],
       "container": "gcr.io/direktiv/functions/nsfw",
       "issues": "https://github.com/direktiv-apps/nsfw/issues",
       "license": "[Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0)",
-      "long-description": "Run nsfw in Direktiv as a function",
+      "long-description": "This function takes a alist of images and classifies them. It returns the following categories and their probabilty:\n\n- drawings\n- hentai\n- neutral\n- porn\n- sexy\n\nIt uses a [Keras/Tensorflow](https://github.com/GantMan/nsfw_model) model with 93% accuracy. This ML (mahcin learning) image requires almost 4GB disk space. Therefore the initial download can take some time depending on the network speed.",
       "maintainer": "[direktiv.io](https://www.direktiv.io) ",
       "url": "https://github.com/direktiv-apps/nsfw"
     }
@@ -317,8 +318,9 @@ func init() {
           "cmds": [
             {
               "action": "foreach",
-              "exec": "sh -c \"python3 /verify.py {{ .Item.Image }} \u003e /dev/null 2\u003e\u00261 \u0026\u0026 cat {{ .Item.Image }}.json\"",
-              "loop": ".Images"
+              "exec": "sh -c \"echo processing {{ .Item.Image }} \u0026\u0026 python3 /verify.py {{ .Item.Image }} \u003e /dev/null 2\u003e\u00261 \u0026\u0026 cat {{ .Item.Image }}.json\"",
+              "loop": ".Images",
+              "print": false
             }
           ],
           "output": "{\n  \"nsfw\": {{ index . 0 | toJson }}\n}\n"

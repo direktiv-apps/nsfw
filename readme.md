@@ -22,7 +22,7 @@ This function takes a alist of images and classifies them. It returns the follow
 - porn
 - sexy
 
-It uses a [Keras/Tensorflow](https://github.com/GantMan/nsfw_model) model with 93% accuracy.
+It uses a [Keras/Tensorflow](https://github.com/GantMan/nsfw_model) model with 93% accuracy. This ML (mahcin learning) image requires almost 4GB disk space. Therefore the initial download can take some time depending on the network speed.
 
 ### Example(s)
   #### Function Configuration

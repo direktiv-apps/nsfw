@@ -29,7 +29,7 @@ func main() {
 
 	parser := flags.NewParser(server, flags.Default)
 	parser.ShortDescription = "nsfw"
-	parser.LongDescription = "Run nsfw in Direktiv"
+	parser.LongDescription = "Classifiy images NSFW (Not-Safe-For-Work)"
 	server.ConfigureFlags()
 	for _, optsGroup := range api.CommandLineOptionsGroups {
 		_, err := parser.AddGroup(optsGroup.ShortDescription, optsGroup.LongDescription, optsGroup.Options)

@@ -155,7 +155,7 @@ func runCommand0(ctx context.Context,
 			params.DirektivDir,
 		}
 
-		cmd, err := templateString(`sh -c "python3 /verify.py {{ .Item.Image }} > /dev/null 2>&1 && cat {{ .Item.Image }}.json"`, ls, params.DirektivDir)
+		cmd, err := templateString(`sh -c "echo processing {{ .Item.Image }} && python3 /verify.py {{ .Item.Image }} > /dev/null 2>&1 && cat {{ .Item.Image }}.json"`, ls, params.DirektivDir)
 		if err != nil {
 			ir := make(map[string]interface{})
 			ir[successKey] = false
@@ -165,7 +165,7 @@ func runCommand0(ctx context.Context,
 		}
 
 		silent := convertTemplateToBool("<no value>", ls, false)
-		print := convertTemplateToBool("<no value>", ls, true)
+		print := convertTemplateToBool("false", ls, true)
 		cont := convertTemplateToBool("<no value>", ls, false)
 		output := ""
 

@@ -2,7 +2,7 @@
 
 // Package restapi nsfw
 //
-//	Run nsfw in Direktiv
+//	Classifiy images NSFW (Not-Safe-For-Work)
 //	Schemes:
 //	  http
 //	Host: localhost

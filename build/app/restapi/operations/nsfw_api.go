@@ -51,7 +51,7 @@ func NewNsfwAPI(spec *loads.Document) *NsfwAPI {
 	}
 }
 
-/*NsfwAPI Run nsfw in Direktiv */
+/*NsfwAPI Classifiy images NSFW (Not-Safe-For-Work) */
 type NsfwAPI struct {
 	spec            *loads.Document
 	context         *middleware.Context

@@ -28,7 +28,7 @@ info:
       - sexy
 
 
-      It uses a [Keras/Tensorflow](https://github.com/GantMan/nsfw_model) model with 93% accuracy.
+      It uses a [Keras/Tensorflow](https://github.com/GantMan/nsfw_model) model with 93% accuracy. This ML (mahcin learning) image requires almost 4GB disk space. Therefore the initial download can take some time depending on the network speed.
       
 consumes:
 - application/json
@@ -89,7 +89,6 @@ paths:
           image: gcr.io/direktiv/functions/nsfw:1.0
           type: knative-workflow
       x-direktiv-examples:
-        # ADD MORE EXAMPLES HERE
         - title: Basic
           content: |-
             - id: nsfw
@@ -117,7 +116,8 @@ paths:
         cmds:
         - action: foreach
           loop: .Images
-          exec: 'sh -c "python3 /verify.py {{ .Item.Image }} > /dev/null 2>&1 && cat {{ .Item.Image }}.json"'
+          exec: 'sh -c "echo processing {{ .Item.Image }} && python3 /verify.py {{ .Item.Image }} > /dev/null 2>&1 && cat {{ .Item.Image }}.json"'
+          print: false
         output: |
           {
             "nsfw": {{ index . 0 | toJson }}
