@@ -121,7 +121,7 @@ paths:
         cmds:
         - action: foreach
           loop: .Images
-          exec: 'sh -c "echo processing {{ .Item.Image }} && python3 /verify.py {{ .Item.Image }} > /dev/null 2>&1 && cat {{ .Item.Image }}.json"'
+          exec: 'sh -c "python3 /verify.py {{ .Item.Image }} > /dev/null 2>&1 && cat {{ .Item.Image }}.json"'
           print: false
         output: |
           {

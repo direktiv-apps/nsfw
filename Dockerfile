@@ -30,6 +30,7 @@ RUN unzip nsfw_mobilenet_v2_140_224.zip && mv mobilenet_v2_140_224 /var
 # get tensorflow and nsfw detector
 RUN python3 -m pip install --upgrade pip
 RUN pip install --upgrade pip nsfw-detector
+
 COPY verify.py /
 
 COPY logo.png /
